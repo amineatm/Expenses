@@ -1,0 +1,38 @@
+using Expenses.API.Data;
+using Expenses.API.Data.Services;
+using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<ExpensesDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
+});
+
+builder.Services.AddScoped<ITransactionsService, TransactionsService>();
+
+builder.Services.AddControllers();
+
+builder.Services.AddOpenApi();
+
+builder.Services.AddEndpointsApiExplorer();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.HideModels();
+    });
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
