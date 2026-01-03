@@ -44,16 +44,15 @@ export class TransactionList implements OnInit {
   }
   deleteTransaction(transaction: Transaction) {
     console.log('delete transaction - ', transaction);
-    if(confirm('Are you sure you want to delete this transaction?')) {
+    if (confirm('Are you sure you want to delete this transaction?')) {
       this.transactionService.delete(transaction.id).subscribe({
-      next: () => {
-        this.loadTransaction();
-      },
-      error: (error) => {
-        console.log('Error:', error);
-      }
-    });
+        next: () => {
+          this.loadTransaction();
+        },
+        error: (error) => {
+          console.log('Error:', error);
+        }
+      });
     }
-    
   }
 }

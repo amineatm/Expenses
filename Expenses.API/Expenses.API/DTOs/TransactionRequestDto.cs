@@ -6,8 +6,10 @@ public class TransactionRequestDto
     public double Amount { get; set; }
 
     [Required]
-    public string Type { get; set; } 
+    public string Type { get; set; }
 
     [Required]
-    public string Category { get; set; } 
+    public string Category { get; set; }
+
+
 }

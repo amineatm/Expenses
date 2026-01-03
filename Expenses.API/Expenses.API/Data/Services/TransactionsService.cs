@@ -42,19 +42,18 @@ namespace Expenses.API.Data.Services
             return await context.Transactions.FirstAsync(x => x.Id == TransactionId);
         }
 
-        public async Task<Transaction> Update(int TransactionId, TransactionRequestDto transactionDto)
+        public async Task<Transaction> Update(int transactionId, TransactionRequestDto dto)
         {
-            Transaction transaction = await context.Transactions.FindAsync(TransactionId);
-            if (transaction is not null)
-            {
-                transaction.UpdatedAt = DateTime.Now;
-                transaction.Category = transactionDto.Category;
-                transaction.Amount = transactionDto.Amount;
-                transaction.Type = transactionDto.Type;
+            var transaction = await context.Transactions.FindAsync(transactionId);
+            if (transaction == null)
+                return null;
 
-                context.SaveChanges();
-            }
+            transaction.Category = dto.Category;
+            transaction.Amount = dto.Amount;
+            transaction.Type = dto.Type;
+            transaction.UpdatedAt = DateTime.UtcNow;
 
+            await context.SaveChangesAsync();
 
             return transaction;
         }

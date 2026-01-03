@@ -1,6 +1,5 @@
 ﻿using Expenses.API.Data;
 using Expenses.API.Data.Services;
-using Expenses.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +7,7 @@ namespace Expenses.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransactionsController(ITransactionsService transactionsService) : ControllerBase
+    public class TransactionsController(ITransactionsService transactionsService, ExpensesDbContext context) : ControllerBase
     {
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllTransations()
@@ -16,10 +15,10 @@ namespace Expenses.API.Controllers
             return Ok(await transactionsService.GetAll());
         }
 
-        [HttpGet("Details/{TransactionId}")]
-        public async Task<IActionResult> GetTransationById([FromRoute] int TransactionId)
+        [HttpGet("Details/{transactionId}")]
+        public async Task<IActionResult> GetTransationById([FromRoute] int transactionId)
         {
-            var transaction = await transactionsService.GetById(TransactionId);
+            var transaction = await transactionsService.GetById(transactionId);
             if (transaction is null) return NotFound();
             return Ok(transaction);
         }
@@ -30,16 +29,34 @@ namespace Expenses.API.Controllers
             return Ok(await transactionsService.Create(payload));
         }
 
-        [HttpPut("Update/{TransactionId:int}")]
-        public async Task<IActionResult> UpdateTransation(int TransactionId, [FromBody] TransactionRequestDto payload)
+        [HttpPut("Update/{transactionId:int}")]
+        public async Task<IActionResult> UpdateTransation(int transactionId, [FromBody] TransactionRequestDto payload)
         {
-            return Ok(await transactionsService.Update(TransactionId, payload));
+            var updated = await transactionsService.Update(transactionId, payload);
+            if (updated == null)
+                return NotFound();
+
+            return Ok(updated);
+
         }
 
-        [HttpDelete("Delete/{TransactionId:int}")]
-        public async Task<IActionResult> DeleteTransation(int TransactionId)
+        [HttpDelete("Delete/{transactionId:int}")]
+        public async Task<IActionResult> DeleteTransation(int transactionId)
         {
-            await transactionsService.Delete(TransactionId);
+            await transactionsService.Delete(transactionId);
+            return NoContent();
+        }
+
+        [HttpDelete("DeleteAll")]
+        public async Task<IActionResult> DeleteAll()
+        {
+            //var transactions = await context.Transactions.ToListAsync();
+
+            //context.Transactions.RemoveRange(transactions);
+            //await context.SaveChangesAsync();
+
+            await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE Transactions");
+
             return NoContent();
         }
     }
