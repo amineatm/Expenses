@@ -1,15 +1,14 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Header } from "./header/header";
-import { Footer } from "./footer/footer";
-import { TransactionForm } from "./transaction-form/transaction-form";
-import { TransactionList } from "./transaction-list/transaction-list";
+import { Header } from './header/header';
+import { Footer } from './footer/footer';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Footer, TransactionForm, TransactionList],
+  standalone: true,
+  imports: [Header, Footer, RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
 export class App {
   protected readonly title = signal('Expenses.Client');
