@@ -28,7 +28,7 @@
     </div>
     <h3>Transactions</h3>
     <div class="table-responsive">
-        <div class="table table-hover align-middle">
+        <table class="table table-hover align-middle w-100">
             <thead class="table-light">
                 <tr>
                     <th style="width: 15%;">Date</th>
@@ -41,7 +41,7 @@
             <tbody>
                 @for (transaction of transactions; track transaction.id) {
                 <tr>
-                    <td>{{ transaction.createdAt }}</td>
+                    <td>{{ transaction.createdAt | date }}</td>
                     <td>{{ transaction.category }}</td>
                     <td [ngClass]="transaction.type === 'Income' ? 'text-success': 'text-danger'">
                         {{ transaction.type}}
@@ -49,11 +49,19 @@
                     <td [ngClass]="transaction.type === 'Income' ? 'text-success': 'text-danger'">
                         {{ transaction.amount | currency}}
                     </td>
-                    <td>options</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" (click)="editTransaction(transaction)">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger me-1"
+                            (click)="deleteTransaction(transaction)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
                 </tr>
                 }
 
             </tbody>
-        </div>
+        </table>
     </div>
 </div>

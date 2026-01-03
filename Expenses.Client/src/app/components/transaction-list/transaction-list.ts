@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TransactionService } from '../../services/transaction';
 import { Transaction } from '../../models/transaction';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-transaction-list',
@@ -10,7 +11,7 @@ import { Transaction } from '../../models/transaction';
   imports: [CommonModule]
 })
 export class TransactionList implements OnInit {
-  constructor(private transactionService: TransactionService) { }
+  constructor(private transactionService: TransactionService, private router: Router) { }
 
   transactions: Transaction[] = [];
 
@@ -27,11 +28,32 @@ export class TransactionList implements OnInit {
   }
 
   getTotalExpenses(): number {
-    return this.transactions.filter(t => t.type === 'Expenses').reduce((sum, t) => sum + t.amount, 0);
+    return this.transactions.filter(t => t.type === 'Expense').reduce((sum, t) => sum + t.amount, 0);
   }
 
   getNetBalance(): number {
     return this.getTotalIncome() - this.getTotalExpenses();
   }
 
+  editTransaction(transaction: Transaction) {
+    console.log('edit transaction - ', transaction);
+
+    if (transaction.id) {
+      this.router.navigate(['/edit/', transaction.id])
+    }
+  }
+  deleteTransaction(transaction: Transaction) {
+    console.log('delete transaction - ', transaction);
+    if(confirm('Are you sure you want to delete this transaction?')) {
+      this.transactionService.delete(transaction.id).subscribe({
+      next: () => {
+        this.loadTransaction();
+      },
+      error: (error) => {
+        console.log('Error:', error);
+      }
+    });
+    }
+    
+  }
 }
