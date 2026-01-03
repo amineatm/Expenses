@@ -7,7 +7,7 @@ namespace Expenses.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransactionsController(ITransactionsService transactionsService, ExpensesDbContext context) : ControllerBase
+    public class TransactionsController(ITransactionsService transactionsService) : ControllerBase
     {
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllTransations()
@@ -15,7 +15,7 @@ namespace Expenses.API.Controllers
             return Ok(await transactionsService.GetAll());
         }
 
-        [HttpGet("Details/{transactionId}")]
+        [HttpGet("Details/{transactionId:int}")]
         public async Task<IActionResult> GetTransationById([FromRoute] int transactionId)
         {
             var transaction = await transactionsService.GetById(transactionId);
@@ -47,17 +47,17 @@ namespace Expenses.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("DeleteAll")]
-        public async Task<IActionResult> DeleteAll()
-        {
-            //var transactions = await context.Transactions.ToListAsync();
+        //[HttpDelete("DeleteAll")]
+        //public async Task<IActionResult> DeleteAll()
+        //{
+        //    //var transactions = await context.Transactions.ToListAsync();
 
-            //context.Transactions.RemoveRange(transactions);
-            //await context.SaveChangesAsync();
+        //    //context.Transactions.RemoveRange(transactions);
+        //    //await context.SaveChangesAsync();
 
-            await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE Transactions");
+        //    await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE Transactions");
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
     }
 }
