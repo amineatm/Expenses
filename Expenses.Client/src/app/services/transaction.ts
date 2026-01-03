@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Transaction } from '../models/transaction';
 
 @Injectable({
   providedIn: 'root',
 })
-export class Transaction {
-  private apiUrl = environment.apiHost + '/transactions';
+export class TransactionService {
+  private apiUrl = environment.apiHost + '/Transactions';
   /**
    *
    */
