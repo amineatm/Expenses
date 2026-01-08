@@ -1,6 +1,6 @@
 ﻿using Expenses.API.Models;
 
-namespace Expenses.API.Data.Services
+namespace Expenses.API.Data.Services.Transactions
 {
     public interface ITransactionsService
     {
@@ -9,6 +9,8 @@ namespace Expenses.API.Data.Services
         Task<Transaction> Create(TransactionRequestDto payload);
         Task<Transaction> Update(int TransactionId, TransactionRequestDto payload);
         Task Delete(int TransactionId);
+
+        Task DeleteAll();
 
     }
 }

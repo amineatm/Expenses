@@ -1,5 +1,7 @@
 using Expenses.API.Data;
-using Expenses.API.Data.Services;
+using Expenses.API.Data.Services.Authentication;
+using Expenses.API.Data.Services.CurrentUser;
+using Expenses.API.Data.Services.Transactions;
 using Expenses.API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -43,8 +45,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddScoped<PasswordHasher<User>>();
+builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<ITransactionsService, TransactionsService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddControllers();
 

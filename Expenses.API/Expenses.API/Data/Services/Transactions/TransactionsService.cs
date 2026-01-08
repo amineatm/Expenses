@@ -1,14 +1,18 @@
-﻿using Expenses.API.Models;
+﻿using Expenses.API.Data.Services.Authentication;
+using Expenses.API.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Expenses.API.Data.Services
+namespace Expenses.API.Data.Services.Transactions
 {
-    public class TransactionsService(ExpensesDbContext context) : ITransactionsService
+    public class TransactionsService(ExpensesDbContext context, ICurrentUserService currentUserService) : ITransactionsService
     {
+        private int CurrentUserId => currentUserService.UserId;
         public async Task<Transaction> Create(TransactionRequestDto transactionDto)
         {
             var transaction = new Transaction()
             {
+                UserId = CurrentUserId,
                 Amount = transactionDto.Amount,
                 Category = transactionDto.Category,
                 Type = transactionDto.Type,
@@ -33,7 +37,10 @@ namespace Expenses.API.Data.Services
 
         public async Task<List<Transaction>> GetAll()
         {
-            return await context.Transactions.ToListAsync();
+            var userId = currentUserService.UserId;
+            return await context.Transactions
+                .Where(t => t.UserId == userId)
+                .ToListAsync();
         }
 
         public async Task<Transaction> GetById(int TransactionId)
@@ -55,6 +62,11 @@ namespace Expenses.API.Data.Services
             await context.SaveChangesAsync();
 
             return transaction;
+        }
+
+        public async Task DeleteAll()
+        {
+            await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE Transactions");
         }
     }
 }
