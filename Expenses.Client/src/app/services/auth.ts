@@ -33,4 +33,8 @@ export class Auth {
     localStorage.removeItem("token");
     this.router.navigate(['/login']);
   }
+
+  IsAuthenticated(): boolean {
+    return !!localStorage.getItem('token');
+  }
 }

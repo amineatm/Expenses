@@ -30,11 +30,11 @@
                             <label for="password" class="form-label">Password</label>
                             <input type="password" class="form-control" id="password" formControlName="password"
                                 [ngClass]="{
-                  'is-invalid':
-                    hasError('password', 'required') ||
-                    hasError('password', 'minlength') ||
-                    hasError('password', 'maxlength')
-                }" />
+                                'is-invalid':
+                                    hasError('password', 'required') || 
+                                    hasError('password', 'minlength') ||
+                                    hasError('password', 'maxlength')
+                                }" />
                             <div class="invalid-feedback" *ngIf="hasError('password', 'required')">
                                 Password is required.
                             </div>

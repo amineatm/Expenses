@@ -48,11 +48,12 @@ export class Signup {
   }
 
   onSumbit() {
+    this.errorMessage = null;
     if (this.signupForm.valid) {
       const signUp = this.signupForm.value;
       this.authService.register(signUp).subscribe({
         next: () => {
-          this.router.navigate(['/transactions'])
+          this.router.navigate(['/login'])
         },
         error: (error) => {
           console.log('--- Error: ', error);

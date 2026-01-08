@@ -3,6 +3,7 @@ import { Login } from './components/login/login';
 import { Signup } from './components/signup/signup';
 import { TransactionList } from './components/transaction-list/transaction-list';
 import { TransactionForm } from './components/transaction-form/transaction-form';
+import { authGuard } from './components/guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -15,15 +16,18 @@ export const routes: Routes = [
     },
     {
         path: 'transactions',
-        component: TransactionList
+        component: TransactionList,
+        canActivate : [authGuard]
     },
     {
         path: 'add',
-        component: TransactionForm
+        component: TransactionForm,
+        canActivate : [authGuard]
     },
     {
         path: 'edit/:id',
-        component: TransactionForm
+        component: TransactionForm,
+        canActivate : [authGuard]
     },
     {
         path: '',
