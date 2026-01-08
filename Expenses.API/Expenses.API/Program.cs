@@ -1,7 +1,12 @@
 using Expenses.API.Data;
 using Expenses.API.Data.Services;
+using Expenses.API.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,12 +17,32 @@ builder.Services.AddDbContext<ExpensesDbContext>(options =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngular",
+    options.AddPolicy("AllowAll",
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+            policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
         });
 });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = true,
+            ValidateIssuer = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+
+            ValidIssuer = "dotnethow.net",
+            ValidAudience = "dotnethow.net",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MyVerySecuredSecretKeyToken32CharsLong-----"))
+        };
+    });
+
+builder.Services.AddScoped<PasswordHasher<User>>();
 
 builder.Services.AddScoped<ITransactionsService, TransactionsService>();
 
@@ -40,9 +65,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowAngular");
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
+
+app.UseAuthentication();
 
 app.MapControllers();
 
