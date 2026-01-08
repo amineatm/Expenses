@@ -1,1 +1,1 @@
-# Expenses
+# Expenses App
