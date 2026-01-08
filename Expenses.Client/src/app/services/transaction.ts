@@ -9,9 +9,8 @@ import { Transaction } from '../models/transaction';
 })
 export class TransactionService {
   private apiUrl = environment.apiHost + '/Transactions';
-  /**
-   *
-   */
+  
+  
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<Transaction[]> {
