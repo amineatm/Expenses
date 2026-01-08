@@ -12,9 +12,9 @@ import { Auth } from '../../services/auth';
 })
 export class Signup {
   signupForm: FormGroup;
-
+  errorMessage: string | null = null;
   constructor(private fb: FormBuilder, private authService: Auth, private router: Router) {
-    this.signupForm = fb.group(
+    this.signupForm = this.fb.group(
       {
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(15)]],
@@ -25,10 +25,26 @@ export class Signup {
       }
     )
   }
+  hasError(controlName: string, errorName: string): boolean {
+    const control = this.signupForm.get(controlName);
+    return !!control && (control.touched || control.dirty) && control.hasError(errorName);
+  }
+
   passwordMatchValidator(fg: FormGroup) {
-    return fg.get('password')?.value === fg.get('confirmPassword')?.value
-      ? null
-      : { passwordMistmatch: true }
+    // return fg.get('password')?.value === fg.get('confirmPassword')?.value
+    //   ? null
+    //   : { passwordMismatch: true }
+
+    const password = fg.get('password');
+    const confirmPassword = fg.get('confirmPassword');
+
+    if (password?.value !== confirmPassword?.value) {
+      confirmPassword?.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    }
+
+    return null;
+
   }
 
   onSumbit() {
@@ -40,6 +56,7 @@ export class Signup {
         },
         error: (error) => {
           console.log('--- Error: ', error);
+          this.errorMessage = error.error
         }
       })
     }
