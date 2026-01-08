@@ -40,7 +40,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           app_location: "./Expenses.Client"
-          output_location: "dist/Expenses.Client/browser"
+          output_location: "dist/Expenses.Client"
           skip_app_build: true
 
   close_pull_request_job:
