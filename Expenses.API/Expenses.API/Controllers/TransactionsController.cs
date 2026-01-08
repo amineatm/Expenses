@@ -1,4 +1,5 @@
 ﻿using Expenses.API.Data.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace Expenses.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowAll")]
+    [Authorize]
     public class TransactionsController(ITransactionsService transactionsService) : ControllerBase
     {
         [HttpGet("GetAll")]
